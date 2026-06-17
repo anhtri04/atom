@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { createMarketDataService, registerMarketDataIpc } from '@main/services/market-data'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
@@ -39,6 +40,7 @@ const createMainWindow = (): void => {
 }
 
 app.whenReady().then(() => {
+  registerMarketDataIpc(createMarketDataService())
   ipcMain.handle('app:get-version', () => app.getVersion())
   ipcMain.handle('window:minimize', (event) => {
     BrowserWindow.fromWebContents(event.sender)?.minimize()
